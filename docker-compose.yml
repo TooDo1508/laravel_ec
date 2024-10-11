@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # - .:/test-app
+    environment:
+    # Các thông số này thay đổi theo password mysql trên máy bạn nhé.
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123
+    networks:
+        - laravel-network
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: phpmyadmin
+    environment:
+        PMA_HOST: mysql
+        PMA_PORT: 3306
+    restart: unless-stopped
+    ports:
+        - '8081:80'
+    networks:
+        - laravel-network
+ 
+# Tạo volume để lần sau có build lại cũng nhanh hơn
+volumes:
+  db_data:
+
+networks:
+  laravel-network:
+    driver: bridge
